@@ -1,0 +1,4 @@
+paddlepaddle==2.5.1
+paddleocr==2.7.0.2
+streamlit==1.23.1
+opencv-python==4.6.0.66
