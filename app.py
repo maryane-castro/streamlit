@@ -7,6 +7,26 @@ from paddleocr import PaddleOCR
 # Inicializa o PaddleOCR
 ocr = PaddleOCR()
 
+# Função para desenhar caixas na imagem
+def draw_boxes_on_image(image, results):
+    img_with_boxes = image.copy()
+    for result in results[0]:
+        text = result[1][0]
+        points = result[0]
+        
+        # Converter pontos para tuplas de números inteiros
+        points = [(int(p[0]), int(p[1])) for p in points]
+
+        # Desenha a caixa delimitadora
+        for i in range(4):
+            cv2.line(img_with_boxes, points[i], points[(i+1) % 4], (0, 255, 0), 2)
+        
+        # Escreve o texto detectado próximo à caixa
+        #cv2.putText(img_with_boxes, text, points[0], cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+    
+    return img_with_boxes
+
+
 # Página 1
 def page_one():
     st.title("Página 1")
@@ -18,54 +38,20 @@ def page_one():
         image = Image.open(uploaded_image)
         image = np.array(image)  # Converta a imagem PIL para uma matriz NumPy
         
-        # Converte a imagem para escala de cinza
-        grayscale_image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
-
-        # Exibe a imagem em preto e branco
-        st.image(grayscale_image, caption='Imagem em Preto e Branco', use_column_width=True)
-        
         # Realiza a detecção de texto usando o PaddleOCR
-        results = ocr.ocr(grayscale_image)
+        results = ocr.ocr(image)
 
-        # Exibe o texto detectado
-        st.write("Texto Detectado:")
-        for result in results[0]:
-            text = result[1][0]
-            st.write(text)
+        # Desenha as caixas na imagem
+        image_with_boxes = draw_boxes_on_image(image, results)
+
+        # Exibe a imagem com as caixas desenhadas
+        st.image(image_with_boxes, caption='Imagem com Caixas Delimitadoras', use_column_width=True)
 
 def page_two():
     st.title("Página 2")
     st.write("Bem-vindo à página 2!")
 
-# Cria um menu para alternar entre as páginas
-menu = ["Página 1", "Página 2"]
-choice = st.sidebar.selectbox("Selecione uma Página", menu)
-
-if choice == "Página 1":
-    page_one()
-else:
-    page_two()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#main da vida
+# Main
 sidebar_selection = st.sidebar.selectbox("Selecione uma página", ("Página 1", "Página 2"))
 if sidebar_selection == "Página 1":
     page_one()
