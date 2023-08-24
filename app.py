@@ -24,7 +24,7 @@ def draw_boxes_on_image(image, results):
     return img_with_boxes
 
 # Página 1
-def page_one():
+def pag1():
     st.title("Página 1")
     st.write("pag1")
     uploaded_image = st.file_uploader("Escolha uma imagem...", type=["jpg", "png", "jpeg"])
@@ -40,7 +40,7 @@ def page_one():
 
             st.image(image_with_boxes, caption='Imagem com Caixas Delimitadoras', use_column_width=True)
 
-def page_two():
+def pag2():
     st.title("NLP")
     st.write("pag2")
 
@@ -50,6 +50,6 @@ def page_two():
 # main da vida
 sidebar_selection = st.sidebar.selectbox("Selecione uma opção", ("PDI", "NLP"))
 if sidebar_selection == "PDI":
-    page_one()
+    pag1()
 else:
-    page_two()
+    pag2()
